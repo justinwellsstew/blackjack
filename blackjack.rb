@@ -12,16 +12,16 @@ def total(hand)
       total += 11
     elsif x[0] =="Jack" || x[0] == "Queen" or x[0] == "King"
       total += 10
-    else 
-      total += x[0]  
+    else
+      total += x[0] 
     end
   end
   return total
-end 
+end
 
-def say_total(total)
-  puts "your total is #{total}" 
-end 
+def say_total(player, total)
+  puts "#{player} total is #{total}"
+end
 
 #method to read out hand
 def read_hand(player, hand)
@@ -32,13 +32,13 @@ def read_hand(player, hand)
     read_hand += x[1].to_s
     read_hand += " and "
   end
-  return read_hand 
-end 
+  return read_hand
+end
 
 #method to put read head to screen
 def say_hand(read_hand)
   puts read_hand
-end   
+end  
 
 
 deck = values.product(suits)
@@ -53,14 +53,14 @@ say_hand(player_read_hand)
 
 player_total = total(player_hand)
 
-say_total(player_total)
-
+say_total("player", player_total)
 
 puts "--------------------------------------------------------"
 
 #Deal to computer
 
 computer_hand = deck.sample(2)
+deck.delete(computer_hand)
 
 computer_read_hand = read_hand("computer", computer_hand)
 
@@ -68,10 +68,24 @@ say_hand(computer_read_hand)
 
 computer_total = total(computer_hand)
 
-say_total(computer_total)
+say_total("Computer", computer_total)
 
 
+# If dealer is below 17, hit dealer
+if computer_total < 17
+  begin
+  hit = deck.sample
+  computer_hand = computer_hand.push(hit)
 
+  # print computer hand to screen
+  computer_read_hand = read_hand("computer", computer_hand)
+  say_hand(computer_read_hand)
+  computer_total = total(computer_hand)
+  say_total("Computer", computer_total)
+  end until computer_total >= 17 
+end
+
+# Ask player if they would like to be hit.
 puts "Would you like to be hit, put y for YES and n for NO"
 hit_answer = gets.chomp.downcase
 if hit_answer == "y"
@@ -84,9 +98,15 @@ say_hand(player_read_hand)
 
 player_total = total(player_hand)
 
-say_total(player_total)
+say_total("player", player_total)
 
-
-  
-
-
+if player_total > 21
+  puts "Bust, you went over 21.. Computer wins"
+elsif computer_total > 21
+  puts "Bust, computer went over 21.. player wins"
+elsif player_total < computer_total
+  puts "Computer wins"
+else  
+  puts "You win"
+end      
+      
