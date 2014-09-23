@@ -30,7 +30,7 @@ def read_hand(player, hand)
     read_hand += x[0].to_s
     read_hand += " of "
     read_hand += x[1].to_s
-    read_hand += " and "
+    read_hand += " | "
   end
   return read_hand
 end
@@ -42,10 +42,11 @@ end
 
 
 deck = values.product(suits)
+deck.shuffle!
 
 
 #Deal to player
-player_hand = deck.sample(2)
+player_hand = deck.pop(2)
 
 player_read_hand = read_hand("player", player_hand)
 
@@ -59,8 +60,8 @@ puts "--------------------------------------------------------"
 
 #Deal to computer
 
-computer_hand = deck.sample(2)
-deck.delete(computer_hand)
+computer_hand = deck.pop(2)
+
 
 computer_read_hand = read_hand("computer", computer_hand)
 
@@ -74,7 +75,7 @@ say_total("Computer", computer_total)
 # If dealer is below 17, hit dealer
 if computer_total < 17
   begin
-  hit = deck.sample
+  hit = deck.pop
   computer_hand = computer_hand.push(hit)
 
   # print computer hand to screen
@@ -86,11 +87,12 @@ if computer_total < 17
 end
 
 # Ask player if they would like to be hit.
-puts "Would you like to be hit, put y for YES and n for NO"
 hit_answer = gets.chomp.downcase
 if hit_answer == "y"
-  player_hand = player_hand.push (deck.sample)
-end
+  player_hand = player_hand.push (deck.pop)
+end 
+
+
 
 player_read_hand = read_hand("player", player_hand)
 
